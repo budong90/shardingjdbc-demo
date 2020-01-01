@@ -6,7 +6,13 @@
 
     <groupId>cc.eslink</groupId>
     <artifactId>shardingjdbc-demo</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>shard-jdbc-starter</module>
+        <module>shard-jdbc-yb</module>
+        <module>untitled/shard-jdbc-yml</module>
+    </modules>
 
 
 </project>
