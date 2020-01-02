@@ -3,8 +3,11 @@ package cc.eslink.config;
 import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.collect.Lists;
-import io.shardingsphere.core.yaml.sharding.YamlShardingConfiguration;
-import io.shardingsphere.shardingjdbc.jdbc.core.datasource.ShardingDataSource;
+//import io.shardingsphere.core.yaml.sharding.YamlShardingConfiguration;
+//import io.shardingsphere.shardingjdbc.jdbc.core.datasource.ShardingDataSource;
+import io.shardingjdbc.core.jdbc.core.datasource.ShardingDataSource;
+import io.shardingjdbc.core.rule.ShardingRule;
+import io.shardingjdbc.core.yaml.sharding.YamlShardingConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 
 @Configuration
@@ -41,13 +45,12 @@ public class DataSourceConfig {
     @Bean
     public DataSource dataSource() throws SQLException, IOException {
         YamlShardingConfiguration config = parse();
-        Collection<String> dsNames = new HashSet<>();
-        config.getDataSources().forEach((k, v) -> {
+        ShardingRule rule = config.getShardingRule(Collections.<String, DataSource>emptyMap());
+        rule.getDataSourceMap().forEach((k,v)->{
             DruidDataSource d = (DruidDataSource) v;
-            dsNames.add(d.getName());
             d.setProxyFilters(Lists.newArrayList(statFilter));
         });
-        return new ShardingDataSource(config.getDataSources(), config.getShardingRule(dsNames));
+        return new ShardingDataSource(rule, config.getShardingRule().getConfigMap(), config.getShardingRule().getProps());
     }
 
     /**
