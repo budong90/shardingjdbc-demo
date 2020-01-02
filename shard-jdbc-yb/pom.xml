@@ -5,7 +5,10 @@
     <artifactId>shard-jdbc-yb</artifactId>
     <packaging>jar</packaging>
     <name>shard-jdbc-yb</name>
-    <description>shard-jdbc-yb</description>
+    <description>shard-jdbc-yb
+        第二种 硬编码方式：
+        这种方式使用Java config的方式，数据源，分片策略都要编码，这种方式比较灵活，但是所有策略都要硬编码，不方便维护
+    </description>
     <groupId>cc.eslink</groupId>
     <version>0.0.1-SNAPSHOT</version>
 
@@ -14,6 +17,7 @@
         <java.version>1.8</java.version>
         <spring_boot.version>2.0.3.RELEASE</spring_boot.version>
         <sharding.jdbc.version>2.0.3</sharding.jdbc.version>
+        <shardingsphere.version>3.1.0</shardingsphere.version>
         <mybatis.version>1.2.0</mybatis.version>
         <druid.version>1.1.6</druid.version>
     </properties>
@@ -36,6 +40,18 @@
             <artifactId>sharding-jdbc-core</artifactId>
             <version>${sharding.jdbc.version}</version>
         </dependency>
+
+        <!--<dependency>
+            <groupId>io.shardingsphere</groupId>
+            <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
+            <version>${shardingsphere.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.shardingsphere</groupId>
+            <artifactId>sharding-jdbc-spring-namespace</artifactId>
+            <version>${shardingsphere.version}</version>
+        </dependency>-->
 
         <dependency>
             <groupId>mysql</groupId>
@@ -89,6 +105,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>7</source>
+                    <target>7</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>

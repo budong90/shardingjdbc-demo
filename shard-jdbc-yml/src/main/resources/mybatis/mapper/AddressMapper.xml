@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.eslink.mapper.AddressMapper">
+
+    <resultMap id="AddressMap" type="Address">
+        <result column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+        <result column="pid" property="pid"/>
+        <result column="type" property="type"/>
+        <result column="lit" property="lit"/>
+    </resultMap>
+
+    <insert id="save" parameterType="Address">
+        INSERT INTO t_address(code,name,pid,type,lit)
+        VALUES
+        (
+        #{code},#{name},#{pid},#{type},#{lit}
+        )
+    </insert>
+    
+    <select id="get" parameterType="long" resultType="Address">
+    	select * from t_address where id = #{id}
+    </select>
+
+    <select id="select" resultMap="AddressMap">
+        select a.*
+        from t_address a,
+        t_user b
+        where a.type = b.city_id and b.city_id = 0
+        <if test="lit != null">
+            and a.lit = #{lit}
+        </if>
+        <if test="sex != null">
+            and b.sex = #{sex}
+        </if>
+    </select>
+</mapper>

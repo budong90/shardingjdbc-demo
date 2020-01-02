@@ -1,1 +1,4 @@
 /.idea/
+/shard-jdbc-starter/target/
+/shard-jdbc-yb/target/
+/shard-jdbc-yml/target/
