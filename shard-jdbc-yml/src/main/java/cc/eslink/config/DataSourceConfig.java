@@ -3,11 +3,12 @@ package cc.eslink.config;
 import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.collect.Lists;
-//import io.shardingsphere.core.yaml.sharding.YamlShardingConfiguration;
-//import io.shardingsphere.shardingjdbc.jdbc.core.datasource.ShardingDataSource;
-import io.shardingjdbc.core.jdbc.core.datasource.ShardingDataSource;
-import io.shardingjdbc.core.rule.ShardingRule;
-import io.shardingjdbc.core.yaml.sharding.YamlShardingConfiguration;
+import io.shardingsphere.core.yaml.sharding.YamlShardingConfiguration;
+import io.shardingsphere.shardingjdbc.jdbc.core.datasource.ShardingDataSource;
+//import io.shardingjdbc.core.jdbc.core.datasource.ShardingDataSource;
+//import io.shardingjdbc.core.rule.ShardingRule;
+//import io.shardingjdbc.core.yaml.sharding.YamlShardingConfiguration;
+import io.shardingsphere.core.rule.ShardingRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,9 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 public class DataSourceConfig {
@@ -44,13 +43,21 @@ public class DataSourceConfig {
      */
     @Bean
     public DataSource dataSource() throws SQLException, IOException {
+//        YamlShardingConfiguration config = parse();
+//        ShardingRule rule = config.getShardingRule(Collections.<String, DataSource>emptyMap());
+//        rule.getDataSourceMap().forEach((k,v)->{
+//            DruidDataSource d = (DruidDataSource) v;
+//            d.setProxyFilters(Lists.newArrayList(statFilter));
+//        });
+//        return new ShardingDataSource(rule, config.getShardingRule().getConfigMap(), config.getShardingRule().getProps());
+
         YamlShardingConfiguration config = parse();
-        ShardingRule rule = config.getShardingRule(Collections.<String, DataSource>emptyMap());
-        rule.getDataSourceMap().forEach((k,v)->{
+        config.getDataSources().keySet();
+        config.getDataSources().forEach((k, v) -> {
             DruidDataSource d = (DruidDataSource) v;
             d.setProxyFilters(Lists.newArrayList(statFilter));
         });
-        return new ShardingDataSource(rule, config.getShardingRule().getConfigMap(), config.getShardingRule().getProps());
+        return new ShardingDataSource(config.getDataSources(), config.getShardingRule(config.getDataSources().keySet()), new ConcurrentHashMap<>(), config.getProps());
     }
 
     /**
